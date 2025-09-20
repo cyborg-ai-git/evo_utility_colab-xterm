@@ -2,7 +2,7 @@
 from distutils.core import setup
 from setuptools import find_packages  # type: ignore
 import os
-VERSION='2025.9.201727'
+VERSION='2025.9.201737'
 
 def _get_version():
     version_file = os.path.normpath(os.path.join(os.path.dirname(__file__), 'cyborgai_colab_xterm', 'VERSION'))
