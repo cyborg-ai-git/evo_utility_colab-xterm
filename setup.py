@@ -10,10 +10,10 @@ def _get_version():
             version = fh.read().strip()
             # If version is 'dev', use a proper version format
             if version == 'dev':
-                return '0.1.0.dev0'
+                return '2025.9.201656.dev0'
             return version
     except FileNotFoundError:
-        return '0.1.0'
+       return '2025.9.201656'
 
 setup(name='colab-xterm',
       version=_get_version(),
