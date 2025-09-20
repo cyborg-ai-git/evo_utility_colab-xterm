@@ -74,6 +74,8 @@ def _xterm_magic(args_string):
             return s.connect_ex(('localhost', port)) == 0
 
     parsed_args = shlex.split(args_string, comments=True, posix=True)
+    print(f"DEBUG: args_string = '{args_string}'")
+    print(f"DEBUG: parsed_args = {parsed_args}")
     height = 800
     port = 10000
     command_args = []
@@ -82,20 +84,27 @@ def _xterm_magic(args_string):
     # %xterm height=300 port=10001 command="ls -l"
     for parameter in parsed_args:
         kv_pair:list[str] = str(parameter).split('=', 1)  # Split only on first '=' to handle commands with '='
+        print(f"DEBUG: parameter = '{parameter}', kv_pair = {kv_pair}")
         if len(kv_pair) == 2:
             k = kv_pair[0]
             v = kv_pair[1]
+            print(f"DEBUG: k = '{k}', v = '{v}'")
             if k == "height" and v.isdigit():
                 height = int(v)
+                print(f"DEBUG: Set height = {height}")
             elif k == "port" and v.isdigit():
                 port = int(v)
+                print(f"DEBUG: Set port = {port}")
             elif k == "command":
+                print(f"DEBUG: Found command parameter: '{v}'")
                 # Parse the command string into arguments
                 try:
                     command_args = shlex.split(v)
+                    print(f"DEBUG: Parsed command_args = {command_args}")
                 except ValueError:
                     # If command parsing fails, treat as single argument
                     command_args = [v]
+                    print(f"DEBUG: Command parsing failed, using single arg: {command_args}")
 
     while True:
         if not is_port_in_use(port):
