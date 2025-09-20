@@ -8,7 +8,7 @@ import time
 
 
 def _get_info_file_path(pid):
-    info_dir = os.path.join(tempfile.gettempdir(), ".colab-xterm-info")
+    info_dir = os.path.join(tempfile.gettempdir(), ".cyborgai-colab-xterm-info")
     try:
         os.makedirs(info_dir)
     except OSError as e:
@@ -49,8 +49,8 @@ def remove_info_file(pid):
 
 
 def start(arguments, port, timeout=datetime.timedelta(seconds=60)):
-    cmd = ["python", "-m", "colabxterm", "--port", str(port)] + arguments
-    print(f"DEBUG: manager.start executing: {cmd}")
+    cmd = ["python", "-m", "cyborgai_colab_xterm", "--port", str(port)] + arguments
+
     p = subprocess.Popen(cmd)
 
     poll_interval_seconds = 0.5

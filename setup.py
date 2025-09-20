@@ -2,10 +2,10 @@
 from distutils.core import setup
 from setuptools import find_packages  # type: ignore
 import os
-VERSION='2025.9.201721'
+VERSION='2025.9.201727'
 
 def _get_version():
-    version_file = os.path.normpath(os.path.join(os.path.dirname(__file__), 'colabxterm', 'VERSION'))
+    version_file = os.path.normpath(os.path.join(os.path.dirname(__file__), 'cyborgai_colab_xterm', 'VERSION'))
     try:
         with open(version_file) as fh:
             version = fh.read().strip()
@@ -16,19 +16,19 @@ def _get_version():
     except FileNotFoundError:
        return VERSION
 
-setup(name='colab-xterm',
+setup(name='cyborgai-colab-xterm',
       version=_get_version(),
       description='Open a terminal in colab, including the free tier.',
       long_description_content_type="text/markdown",
       long_description=open('README.md').read(),
-      url='https://github.com/InfuseAI/colab-xterm',
+      url='https://github.com/cyborg-ai-git',
       project_urls={
           "Bug Tracker": "https://github.com/cyborg-ai-git/evo_utility_colab-xterm.git",
       },
       python_requires=">=3.6",
-      packages=["colabxterm"],
+      packages=["cyborgai_colab_xterm"],
       package_data={
-          'colabxterm': ['client/dist/*', 'VERSION']
+          'cyborgai_colab_xterm': ['client/dist/*', 'VERSION']
       },
       include_package_data=True,
       install_requires=['ptyprocess~=0.7.0', 'tornado>5.1'],

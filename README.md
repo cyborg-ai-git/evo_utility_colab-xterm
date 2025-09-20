@@ -1,12 +1,15 @@
-# colab-xterm
-Colab-xterm allows you to open a terminal in a cell.
+> Thanks:
+> 
 
-# Usage
+# cyborgai-colab-xterm
+CyborgAI Colab-xterm allows you to open a terminal in a cell with command injection support.
+
 
 1. Install package and load the extension
     ```
-    !pip install colab-xterm
-    %load_ext colabxterm
+    !pip install cyborgai-colab-xterm
+    %load_ext cyborgai_colab_xterm
+    ```ad_ext colabxterm
     ```
 2. Open a terminal
     ```
@@ -25,13 +28,17 @@ Try it out in the demo notebook.
 # Options
 
 ```
-%xterm height=1000 port=10001
+%xterm height=1000 port=10001 command="ls -l"
 ```
 
 option | description
 -------|-----------
 height | The height of the terminal panel
 port | The server port
+command | Command to execute when terminal opens (NEW FEATURE!)
 
 # Screenshots
 ![](assets/colab-xterm.png)
+
+
+
