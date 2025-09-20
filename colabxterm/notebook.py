@@ -76,28 +76,33 @@ def _xterm_magic(args_string):
     parsed_args = shlex.split(args_string, comments=True, posix=True)
     height = 800
     port = 10000
+    command_args = []
 
     # Setup parameter from parsed_args to support the following format.
-    # %xterm height=300 port=10001
+    # %xterm height=300 port=10001 command="ls -l"
     for parameter in parsed_args:
-        kv_pair:list[str] = str(parameter).split('=')
+        kv_pair:list[str] = str(parameter).split('=', 1)  # Split only on first '=' to handle commands with '='
         if len(kv_pair) == 2:
             k = kv_pair[0]
             v = kv_pair[1]
-            if v.isdigit():
-                if k == "height":
-                    height = int(v)
-                elif k == "port":
-                    port = int(v)
-    # Clean parsed_args as an empty list to avoid the disability of the magic line command.
-    parsed_args=[]
+            if k == "height" and v.isdigit():
+                height = int(v)
+            elif k == "port" and v.isdigit():
+                port = int(v)
+            elif k == "command":
+                # Parse the command string into arguments
+                try:
+                    command_args = shlex.split(v)
+                except ValueError:
+                    # If command parsing fails, treat as single argument
+                    command_args = [v]
 
     while True:
         if not is_port_in_use(port):
             break
         port = port+1
 
-    manager.start(parsed_args, port)
+    manager.start(command_args, port)
     fn = {
         _CONTEXT_COLAB: _display_colab,
         _CONTEXT_IPYTHON: _display_ipython,
