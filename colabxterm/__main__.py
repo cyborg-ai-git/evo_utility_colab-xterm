@@ -11,5 +11,6 @@ if __name__ == "__main__":
     # Combine parsed command args with any unknown args
     command = args.command + unknown
     port = args.port
+    print(f"DEBUG: Received command: {command}")
     term = colabxterm.XTerm(command, port)
     term.open()

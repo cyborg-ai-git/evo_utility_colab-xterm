@@ -54,13 +54,16 @@ class XTerm:
     def open(self):
         port = self.port
         argv = self.argv
+        print(f"DEBUG: XTerm received argv: {argv}")
         if not argv or len(argv) == 0:
+            print("DEBUG: No command provided, using default shell")
             argv = [os.getenv("SHELL", '/bin/sh')]
         else:
             # If we have a command, run it through the shell
             shell = os.getenv("SHELL", '/bin/sh')
             # Join the command arguments and run through shell
             command_str = ' '.join(argv)
+            print(f"DEBUG: Executing command: {shell} -c '{command_str}'")
             argv = [shell, '-c', command_str]
 
         try:
