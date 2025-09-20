@@ -49,9 +49,9 @@ def remove_info_file(pid):
 
 
 def start(arguments, port, timeout=datetime.timedelta(seconds=60)):
-    p = subprocess.Popen(
-        ["python", "-m", "colabxterm", "--port", str(port)] + arguments,
-    )
+    cmd = ["python", "-m", "colabxterm", "--port", str(port)] + arguments
+    print(f"DEBUG: manager.start executing: {cmd}")
+    p = subprocess.Popen(cmd)
 
     poll_interval_seconds = 0.5
     while True:

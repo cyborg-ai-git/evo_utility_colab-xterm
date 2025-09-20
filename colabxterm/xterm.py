@@ -14,12 +14,21 @@ class MainHandler(tornado.web.RequestHandler):
 
 
 class StdoutHandler(tornado.web.RequestHandler):
-    def initialize(self, process):
+    def initialize(self, process, initial_command=None):
         self.process = process
+        self.initial_command = initial_command
+        self.command_sent = False
 
     async def get(self):
         loop = asyncio.get_event_loop()
         try:
+            # Send initial command on first read if we have one
+            if self.initial_command and not self.command_sent:
+                print(f"DEBUG: Sending initial command on first stdout read: '{self.initial_command}'")
+                command_with_newline = self.initial_command + '\n'
+                self.process.write(command_with_newline.encode())
+                self.command_sent = True
+                
             b = await loop.run_in_executor(None, lambda:  self.process.read(4*1024*1024))
             self.write(b)
             await self.flush()
@@ -52,9 +61,12 @@ class XTerm:
         self.port = port
         self.initial_command = None
         
+        print(f"DEBUG: XTerm.__init__ received argv: {argv}")
+        
         # If we have a command, store it to send after shell starts
         if argv and len(argv) > 0:
             self.initial_command = ' '.join(argv)
+            print(f"DEBUG: Initial command set to: '{self.initial_command}'")
 
     def open(self):
         port = self.port
@@ -64,17 +76,7 @@ class XTerm:
         try:
             process = PtyProcess.spawn(argv)
             
-            # If we have an initial command, send it after a brief delay
-            if self.initial_command:
-                def send_initial_command():
-                    import time
-                    time.sleep(0.5)  # Wait for shell to be ready
-                    command_with_newline = self.initial_command + '\n'
-                    process.write(command_with_newline.encode())
-                
-                # Run the command sending in a separate thread
-                import threading
-                threading.Thread(target=send_initial_command, daemon=True).start()
+            print(f"DEBUG: Setting up tornado app with initial_command: {self.initial_command}")
             
             staticFolder = os.path.join(
                 os.path.dirname(__file__), "client/dist")
@@ -83,7 +85,7 @@ class XTerm:
 
         try:
             app = tornado.web.Application([
-                (r"/out", StdoutHandler, dict(process=process)),
+                (r"/out", StdoutHandler, dict(process=process, initial_command=self.initial_command)),
                 (r"/in/(.*)", StdinHandler, dict(process=process)),
                 (r"/resize", ResizeHandler, dict(process=process)),
                 (r"/(.*\.js)", tornado.web.StaticFileHandler,

@@ -102,6 +102,7 @@ def _xterm_magic(args_string):
             break
         port = port+1
 
+    print(f"DEBUG: notebook.py calling manager.start with command_args: {command_args}")
     manager.start(command_args, port)
     fn = {
         _CONTEXT_COLAB: _display_colab,
