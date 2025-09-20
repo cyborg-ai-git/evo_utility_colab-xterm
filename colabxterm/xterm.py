@@ -56,6 +56,12 @@ class XTerm:
         argv = self.argv
         if not argv or len(argv) == 0:
             argv = [os.getenv("SHELL", '/bin/sh')]
+        else:
+            # If we have a command, run it through the shell
+            shell = os.getenv("SHELL", '/bin/sh')
+            # Join the command arguments and run through shell
+            command_str = ' '.join(argv)
+            argv = [shell, '-c', command_str]
 
         try:
             process = PtyProcess.spawn(argv)
