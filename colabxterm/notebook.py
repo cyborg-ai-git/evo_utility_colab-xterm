@@ -73,7 +73,7 @@ def _xterm_magic(args_string):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             return s.connect_ex(('localhost', port)) == 0
 
-    parsed_args = shlex.split(args_string, comments=True, posix=True)
+    parsed_args = shlex.split(args_string, comments=False, posix=True)
     print(f"DEBUG: args_string = '{args_string}'")
     print(f"DEBUG: parsed_args = {parsed_args}")
     height = 800
