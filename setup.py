@@ -2,6 +2,7 @@
 from distutils.core import setup
 from setuptools import find_packages  # type: ignore
 import os
+VERSION='2025.9.201702'
 
 def _get_version():
     version_file = os.path.normpath(os.path.join(os.path.dirname(__file__), 'colabxterm', 'VERSION'))
@@ -10,10 +11,10 @@ def _get_version():
             version = fh.read().strip()
             # If version is 'dev', use a proper version format
             if version == 'dev':
-                return '2025.9.201656.dev0'
+                return VERSION + '.dev0'
             return version
     except FileNotFoundError:
-       return '2025.9.201656'
+       return VERSION
 
 setup(name='colab-xterm',
       version=_get_version(),
@@ -22,7 +23,7 @@ setup(name='colab-xterm',
       long_description=open('README.md').read(),
       url='https://github.com/InfuseAI/colab-xterm',
       project_urls={
-          "Bug Tracker": "https://github.com/InfuseAI/colab-xterm/issues",
+          "Bug Tracker": "https://github.com/cyborg-ai-git/evo_utility_colab-xterm.git",
       },
       python_requires=">=3.6",
       packages=["colabxterm"],

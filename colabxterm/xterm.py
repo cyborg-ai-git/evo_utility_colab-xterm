@@ -50,24 +50,32 @@ class XTerm:
     def __init__(self, argv: List, port=10000):
         self.argv = argv
         self.port = port
+        self.initial_command = None
+        
+        # If we have a command, store it to send after shell starts
+        if argv and len(argv) > 0:
+            self.initial_command = ' '.join(argv)
 
     def open(self):
         port = self.port
-        argv = self.argv
-        print(f"DEBUG: XTerm received argv: {argv}")
-        if not argv or len(argv) == 0:
-            print("DEBUG: No command provided, using default shell")
-            argv = [os.getenv("SHELL", '/bin/sh')]
-        else:
-            # If we have a command, run it through the shell
-            shell = os.getenv("SHELL", '/bin/sh')
-            # Join the command arguments and run through shell
-            command_str = ' '.join(argv)
-            print(f"DEBUG: Executing command: {shell} -c '{command_str}'")
-            argv = [shell, '-c', command_str]
+        # Always start with a normal shell
+        argv = [os.getenv("SHELL", '/bin/sh')]
 
         try:
             process = PtyProcess.spawn(argv)
+            
+            # If we have an initial command, send it after a brief delay
+            if self.initial_command:
+                def send_initial_command():
+                    import time
+                    time.sleep(0.5)  # Wait for shell to be ready
+                    command_with_newline = self.initial_command + '\n'
+                    process.write(command_with_newline.encode())
+                
+                # Run the command sending in a separate thread
+                import threading
+                threading.Thread(target=send_initial_command, daemon=True).start()
+            
             staticFolder = os.path.join(
                 os.path.dirname(__file__), "client/dist")
         except Exception as e:
