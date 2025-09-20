@@ -5,9 +5,15 @@ import os
 
 def _get_version():
     version_file = os.path.normpath(os.path.join(os.path.dirname(__file__), 'colabxterm', 'VERSION'))
-    with open(version_file) as fh:
-        version = fh.read().strip()
-        return version
+    try:
+        with open(version_file) as fh:
+            version = fh.read().strip()
+            # If version is 'dev', use a proper version format
+            if version == 'dev':
+                return '0.1.0.dev0'
+            return version
+    except FileNotFoundError:
+        return '0.1.0'
 
 setup(name='colab-xterm',
       version=_get_version(),
@@ -23,7 +29,7 @@ setup(name='colab-xterm',
       package_data={
           'colabxterm': ['client/dist/*', 'VERSION']
       },
-      include_package_data=False,
+      include_package_data=True,
       install_requires=['ptyprocess~=0.7.0', 'tornado>5.1'],
       extras_require={
           'dev': [
